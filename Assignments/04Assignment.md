@@ -2,12 +2,27 @@
 
 ## Overview
 
-In this assignment, you will work with two popular NoSQL databases:
+In this assignment, you will work with two widely used NoSQL technologies:
 
-* **MongoDB** – document-oriented database
-* **Redis** – in-memory key-value data store
+* **MongoDB** – a document-oriented database
+* **Redis** – an in-memory key-value data store
 
-The goal is to understand the differences between document storage and key-value storage, practice CRUD operations, and learn how to model and retrieve data efficiently.
+The objective is to learn how NoSQL databases store data, perform CRUD operations, optimize query performance, and use Redis data structures for caching and fast data access.
+
+---
+
+# Learning Objectives
+
+By completing this assignment, students will be able to:
+
+* Design and populate MongoDB collections.
+* Perform CRUD operations in MongoDB.
+* Build aggregation pipelines.
+* Analyze query performance using MongoDB tools.
+* Create and use indexes to optimize queries.
+* Work with Redis Strings, Hashes, Lists, Sets, and Sorted Sets.
+* Implement caching using Redis TTL.
+* Compare document databases and key-value stores.
 
 ---
 
@@ -15,11 +30,21 @@ The goal is to understand the differences between document storage and key-value
 
 ## Scenario
 
-You are building a simple online bookstore.
+You are developing a backend database for an online bookstore.
 
-Create a MongoDB database called `bookstore` and a collection called `books`.
+Create a MongoDB database called:
 
-Each document should contain:
+```text
+bookstore
+```
+
+Create a collection:
+
+```text
+books
+```
+
+Each document should contain the following fields:
 
 ```json
 {
@@ -29,49 +54,160 @@ Each document should contain:
   "category": "Programming",
   "price": 35,
   "in_stock": true,
-  "published_year": 2008
+  "published_year": 2008,
+  "rating": 4.8
 }
 ```
 
-## Tasks
+---
 
-### 1. Insert Data
+## Task 1. Data Generation
 
-Insert at least **10 books** into the collection.
+Insert at least **30 books** into the collection.
 
-### 2. Query Data
+Requirements:
+
+* At least 4 different categories.
+* At least 5 different authors.
+* Various publication years.
+* Various prices.
+
+---
+
+## Task 2. CRUD Operations
+
+### Create
+
+Insert at least 5 additional books.
+
+### Read
 
 Write queries to:
 
 * Find all books in the "Programming" category.
 * Find books published after 2015.
-* Find books with a price greater than $40.
-* Find books that are currently in stock.
+* Find books priced above $40.
+* Find books currently in stock.
+* Find books written by a specific author.
+* Find books with a rating greater than 4.5.
 
-### 3. Update Data
+### Update
 
-Update at least one book:
+Perform at least 3 updates:
 
-* Change its price.
-* Change its stock status.
+* Change the price of a book.
+* Update stock availability.
+* Increase the rating of a selected book.
 
-### 4. Delete Data
+### Delete
 
-Delete one book from the collection.
+Delete at least 2 books from the collection.
 
-### 5. Aggregation
+---
 
-Create an aggregation pipeline that:
+## Task 3. Aggregation Framework
 
-* Calculates the average price per category.
-* Counts the number of books in each category.
+Create aggregation pipelines to answer the following questions:
+
+### Aggregation 1
+
+Calculate:
+
+* Average book price per category.
+
+### Aggregation 2
+
+Find:
+
+* Number of books per category.
+
+### Aggregation 3
+
+Calculate:
+
+* Average rating per category.
+
+### Aggregation 4
+
+Return:
+
+* Top 5 most expensive books.
+
+---
+
+## Task 4. MongoDB Query Optimization
+
+### Step 1. Analyze Query Performance
+
+Run the following query:
+
+```javascript
+db.books.find({
+    category: "Programming",
+    published_year: { $gte: 2020 }
+}).explain("executionStats")
+```
+
+Save the execution statistics.
+
+Answer the following questions:
+
+1. How many documents were scanned?
+2. Was a collection scan performed?
+3. What was the execution time?
+
+---
+
+### Step 2. Create an Index
+
+Create a compound index:
+
+```javascript
+db.books.createIndex({
+    category: 1,
+    published_year: 1
+})
+```
+
+---
+
+### Step 3. Re-run Performance Analysis
+
+Execute the same query again:
+
+```javascript
+db.books.find({
+    category: "Programming",
+    published_year: { $gte: 2020 }
+}).explain("executionStats")
+```
+
+Compare the results before and after indexing.
+
+---
+
+### Step 4. Performance Report
+
+Create a short report (1-2 pages) explaining:
+
+* Why indexes improve performance.
+* Differences between COLLSCAN and IXSCAN.
+* How many documents were examined before and after indexing.
+* Whether execution time improved.
+
+Include screenshots of both execution plans.
+
+---
 
 ## Deliverables
 
 Submit:
 
-* MongoDB script (`mongodb_assignment.js`) containing all commands.
-* Screenshots showing successful execution of queries and aggregation results.
+* `mongodb_assignment.js`
+* Screenshots of CRUD operations
+* Screenshots of aggregation results
+* Screenshots of execution plans
+* Optimization report (`mongodb_optimization_report.pdf`)
 
 ---
 
@@ -79,31 +215,29 @@ Submit:
 
 ## Scenario
 
-You are implementing a caching system for an e-commerce application.
+You are building a cache layer for an e-commerce platform.
 
-## Tasks
+---
 
-### 1. String Operations
+## Task 1. String Operations
 
-Store and retrieve:
+Store the following information using Strings:
 
-* Product name
-* Product price
-* Product category
-
-Example keys:
-
-```
+```text
 product:1:name
 product:1:price
 product:1:category
 ```
 
-### 2. Hash Operations
+Retrieve all values.
 
-Create a Redis Hash for a product:
+---
 
-```
+## Task 2. Hash Operations
+
+Create a product hash:
+
+```text
 product:2
 ```
 
@@ -116,71 +250,123 @@ Fields:
 
 Retrieve all fields.
 
-### 3. List Operations
+---
 
-Create a list called:
+## Task 3. List Operations
 
-```
+Create:
+
+```text
 recent_orders
 ```
 
-Add at least 5 order IDs and retrieve all values.
+Add at least 10 order IDs.
 
-### 4. Set Operations
+Display:
 
-Create a set called:
+* All orders.
+* The latest 3 orders.
 
-```
+---
+
+## Task 4. Set Operations
+
+Create:
+
+```text
 product_tags
 ```
 
-Add at least 5 tags and verify that duplicates are not stored.
+Add at least 8 tags.
 
-### 5. Expiration (TTL)
+Demonstrate:
 
-Create a cache key:
+* Duplicate prevention.
+* Membership check using SISMEMBER.
 
-```
+---
+
+## Task 5. Expiration (TTL)
+
+Create:
+
+```text
 featured_product
 ```
 
-Set an expiration time of 60 seconds and verify the remaining TTL.
+Set:
+
+```text
+TTL = 60 seconds
+```
+
+Show:
+
+* Remaining TTL.
+* Automatic expiration.
+
+---
+
+## Task 6. Cache Simulation
+
+Simulate a cached product page:
+
+```text
+cache:product:1001
+```
+
+Store product information.
+
+Requirements:
+
+* Set expiration to 120 seconds.
+* Retrieve cached value.
+* Verify expiration time.
+
+Explain why caching improves application performance.
+
+---
 
 ## Deliverables
 
 Submit:
 
-* Redis script (`redis_assignment.txt` or `redis_assignment.redis`)
-* Screenshots showing successful execution of all commands.
+* `redis_assignment.txt`
+* Screenshots of all commands
+* Short explanation of Redis use cases (`redis_notes.md`)
 
 ---
 
-# Bonus Task (+2.5 points)
-
+# Bonus (+2.5 points)
 
 ## Redis
 
 Create a leaderboard using a Sorted Set:
 
-```
+```text
 sales_leaderboard
 ```
 
-Store at least 5 products with sales counts and display the ranking from highest to lowest score.
+Requirements:
 
-**Bonus Points:** +2.5
+* Store at least 5 products.
+* Use sales count as score.
+* Display ranking from highest to lowest.
+* Display the top-selling product.
+
+**Bonus Points: +2.5**
 
 ---
 
-# Submission Requirements
+# Submission Structure
 
-Submit a ZIP archive containing:
-
-```
+```text
 assignment/
 │
 ├── mongodb_assignment.js
+├── mongodb_optimization_report.pdf
 ├── redis_assignment.txt
+├── redis_notes.md
 ├── screenshots/
 │   ├── mongodb/
 │   └── redis/
@@ -191,18 +377,32 @@ assignment/
 
 # Grading Rubric
 
-| Task                                        |   Points |
-| ------------------------------------------- |---------:|
-| MongoDB: Data insertion and CRUD operations |      3.0 |
-| MongoDB: Queries and Aggregations           |      4.5 |
-| Redis: Strings, Hashes, Lists, Sets         |      5.0 |
-| Redis: TTL / Expiration                     |      2.5 |
-| **Core Assignment Total**                   | **15.0** |
-| Bonus: Redis Sorted Set Leaderboard         |      2.5 |
-| **Maximum Total Score**                     | **17.5** |
+| Category                                |   Points |
+| --------------------------------------- |---------:|
+| MongoDB CRUD Operations                 |      2.5 |
+| MongoDB Aggregations                    |      2.5 |
+| MongoDB Query Optimization and Indexing |      2.5 |
+| Redis Data Structures                   |      5.0 |
+| Redis TTL and Cache Simulation          |      2.5 |
+| **Core Assignment Total**               | **15.0** |
+| Bonus: Redis Leaderboard (Sorted Set)   |      2.5 |
+| **Maximum Total Score**                 | **17.5** |
+
+---
+
+# Evaluation Criteria
+
+The following aspects will be evaluated:
+
+* Correctness of commands and queries.
+* Proper use of MongoDB aggregation framework.
+* Understanding of indexing and query optimization.
+* Correct use of Redis data structures.
+* Quality of documentation and explanations.
+* Completeness of submitted deliverables.
 
 ---
 
 # Academic Integrity
 
-Students must complete the assignment individually. Copying solutions from other students or external sources without proper attribution may result in a score of zero for the assignment.
+Students must complete the assignment individually. All submitted code, screenshots, and reports should be the student's own work. Plagiarism or copying solutions from other students may result in a score of zero for the assignment.
