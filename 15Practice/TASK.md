@@ -1,4 +1,6 @@
-# Practice 1: Getting Started with BigQuery
+# Getting Started with BigQuery
+
+## 1 Point
 
 ## Goal
 
